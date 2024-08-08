@@ -94,7 +94,6 @@ static uint8_t g_nextErrorCode;
 volatile i32_ui8 g_currentMotorPulses;
 volatile i32_ui8 g_currentSetPoint;
 volatile float_ui8 g_currentEncoderPosition;
-float_ui8 g_currentEvaluatedPosition;
 volatile float g_encoderPositionOffset;
 volatile ui16_ui8 g_curentActiveTraj;
 volatile bool g_isMotorOn;
@@ -546,11 +545,12 @@ float evaluateEncoderPosition(){
 void checkErrorLimit(){
   if(!g_closedLoopEnabled || g_errorLimit.ui16==0)
     return;
-
-  if(g_currentEvaluatedPosition.f-g_currentSetPoint.i32>g_errorLimit.ui16 || g_currentEvaluatedPosition.f-g_currentSetPoint.i32<-g_errorLimit.ui16){
+    
+  if(g_evaluatedMotorPosition-g_currentSetPoint.i32>g_errorLimit.ui16 || g_evaluatedMotorPosition-g_currentSetPoint.i32<-g_errorLimit.ui16){
     g_closedLoopEnabled=false;
     g_currentState=STATE_BASICPOSITION;
     g_pidController=PIDcontroller(OL_PID_KP,OL_PID_KI,OL_PID_KD,SAMPLE_TIME_US,200,0);
+    g_currentMotorPulses.i32=g_evaluatedMotorPosition;
     g_trajectories.deleteTrajectories();
     g_trajectories.setLastEvaluation(g_evaluatedMotorPosition);
     g_currentSetPoint.i32=g_evaluatedMotorPosition;
