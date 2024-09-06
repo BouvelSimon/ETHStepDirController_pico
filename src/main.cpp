@@ -45,13 +45,12 @@
 #define MSG_STOP 63
 
 // Open-loop PID parameters
-#define OL_PID_KP 1.0f
+#define OL_PID_KP 100.0f
 #define OL_PID_KI 0.0f
 #define OL_PID_KD 0.0f
-#define OL_PID_TAU_MS 200
 
 // Time constants for motor control
-#define PULSE_TIME_US 50 // Number of microseconds a pulse stays HIGH. Also the max number of microseconds a pulse can stay low
+#define PULSE_TIME_US 10 // Number of microseconds a pulse stays HIGH. Also the max number of microseconds a pulse can stay low
 const uint32_t SAMPLE_TIME_US=2*PULSE_TIME_US;
 
 // Trajectory related defines : 
