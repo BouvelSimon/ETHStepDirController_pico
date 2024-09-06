@@ -51,7 +51,7 @@ int32_t PIDcontroller::update(int32_t measurement){
   currentError=setPoint-measurement;
   proportional=currentError*Kp;
   integrator=integrator+Ki*sampleTimeUs*(currentError+previousError)*0.000005f;
-  differential=0; // todo : implement differential gain
+  differential=-(2*Kd*(measurement-previousMeasurement)+(2*derTimeConstantS-sampleTimeUs) * differential)/(2*derTimeConstantS+sampleTimeUs);;
   
   previousError=currentError;
   previousMeasurement=measurement;
