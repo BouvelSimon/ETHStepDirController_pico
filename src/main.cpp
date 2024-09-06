@@ -148,6 +148,10 @@ void setup() { // core 0 is dedicated to motion control and encoder reading
   // Default start state : 
   g_isMotorOn=false;
   digitalWrite(ENABLE_PIN,LOW);
+  delay(10);
+  digitalWrite(ENABLE_PIN,HIGH); // Need to do a full cycle with most drivers, I'm not sure why
+  delay(10);
+  digitalWrite(ENABLE_PIN,LOW);
   g_closedLoopEnabled=false;
   g_currentState=STATE_BASICPOSITION;
   g_encoderPositionOffset=0;
