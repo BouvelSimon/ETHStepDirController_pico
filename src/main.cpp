@@ -256,8 +256,8 @@ void updatePulse(){
     currentlyPulsing=false;
   }
 
-  // If the frequency is zero, there wont be a rising edge, we can stop here
-  if(g_pulseFrequency==0)
+  // If the frequency is zero or if the motor is off, there wont be a rising edge, we can stop here
+  if(g_pulseFrequency==0 || !g_isMotorOn)
     return;
 
   if(g_dir==1){
