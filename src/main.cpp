@@ -320,11 +320,24 @@ void processDataReceived(uint8_t size){
       break;
     }
     case MSGTYPE_MOTORPOWER:{
-      g_isMotorOn=bool(g_i2cReceiveBuffer[1]);
-      if(g_isMotorOn)
-        digitalWrite(ENABLE_PIN,HIGH);
-      else
+      bool receivedMotorOn=bool(g_i2cReceiveBuffer[1]);
+      if(g_isMotorOn && !receivedMotorOn){ // Transition from ON to OFF
+        g_isMotorOn=false;
         digitalWrite(ENABLE_PIN,LOW);
+      } else if(!g_isMotorOn && receivedMotorOn){ // Transition from OFF to ON
+        g_isMotorOn=true;
+        if(!g_closedLoopEnabled){ // Restarting open loop PID
+          g_pidController=PIDcontroller(OL_PID_KP,OL_PID_KI,OL_PID_KD,SAMPLE_TIME_US,200,0);
+          g_currentMotorPulses.i32=g_evaluatedMotorPosition;
+        } else { // Restarting closed loop PID
+          g_pidController=PIDcontroller(g_Kp.f,g_Ki.f,g_Kd.f,SAMPLE_TIME_US,200,0);
+          if(!g_invertedEncoder)
+            g_rawEncoder=int32_t((g_evaluatedMotorPosition-g_encoderPositionOffset)*float(g_encoderStepsPerRev.ui32)/float(g_motorStepsPerRev.ui32));
+          else
+            g_rawEncoder=-int32_t((g_evaluatedMotorPosition-g_encoderPositionOffset)*float(g_encoderStepsPerRev.ui32)/float(g_motorStepsPerRev.ui32));
+        }
+        digitalWrite(ENABLE_PIN,HIGH);
+      }
       break;
     }
     case MSGTYPE_CONTROLCOEFS:{
