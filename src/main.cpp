@@ -276,7 +276,11 @@ void updatePulse(){
     digitalWrite(PULSE_PIN,HIGH);
     lastRisingEdge=micros();
     currentlyPulsing=true;
-    g_currentMotorPulses.i32=g_currentMotorPulses.i32+g_dir;
+    if(!g_invertedMotor){
+      g_currentMotorPulses.i32=g_currentMotorPulses.i32+g_dir;
+    }else{
+      g_currentMotorPulses.i32=g_currentMotorPulses.i32-g_dir;
+    }
   }
 }
 
@@ -359,7 +363,8 @@ void processDataReceived(uint8_t size){
       g_maxVelocity.ui8[3]=g_i2cReceiveBuffer[16];
       g_errorLimit.ui8[0]=g_i2cReceiveBuffer[17];
       g_errorLimit.ui8[1]=g_i2cReceiveBuffer[18];
-      g_pidController.setGains(g_Kp.f,g_Ki.f,g_Kd.f);
+      if(g_closedLoopEnabled)
+        g_pidController.setGains(g_Kp.f,g_Ki.f,g_Kd.f);
       break;
     }
     case MSGTYPE_HWCONFIG:{
