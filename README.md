@@ -1,1 +1,1 @@
-This is the code of the Raspberry pi pico on a motor controller named ETHStepperController. You can check out the full documentation here : https://meowing-sail-2d7.notion.site/ETHStepperController-4fcda648ec5245b6819083ba76239e1d
+This is the code of the Raspberry pi pico on a motor controller named ETHStepDirController. You can check out the full documentation here : https://www.simonbouvel.com/ETHStepDirController-4fcda648ec5245b6819083ba76239e1d
